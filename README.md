@@ -1,2 +1,2 @@
 # core
-The Studio W developments core package.
+The Studio W developments _core package_.
