@@ -5,13 +5,13 @@ MutableStringTestSuite
 Tests for the `MutableString` class.
 
 
-__author__ = "Massimiliano Zecchetto"
+__author__ = "Studio W Engineers"
 
 __version__ = "0.0.0"
 
-__maintainer__ = "Massimiliano Zecchetto"
+__maintainer__ = "Studio W Engineers"
 
-__email__ = "eng.massimiliano.zecchetto@gmail.com"
+__email__ = "studio.w.engineers@gmail.com"
 
 __status__ "Release to manufacturing"
 """
