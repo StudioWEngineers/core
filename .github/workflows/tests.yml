@@ -1,21 +1,21 @@
-name: Run Tests
+name: Build and test
 
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 jobs:
-  tests:
+  standard:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        os: ["windows-2019", "windows-2022"]
+        python-version: ["3.10", "3.11", "3.12"]
 
-    name: Python ${{ matrix.python-version }} / ${{ matrix.os }}
+    name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
 
@@ -35,4 +35,4 @@ jobs:
 
     - name: Run package tests
       run: |
-        python -m unittest discover sw_core_data_types\src\sw_core
+        python -m unittest discover --verbose sw_core_data_types\src\sw_core
