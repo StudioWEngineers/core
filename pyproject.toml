@@ -17,6 +17,9 @@ dependencies = ["numpy"]
 [tool.setuptools]
 include-package-data = false
 
+[tool.setuptools.package-data]
+"sw_core_data_types" = ["py.typed"]
+
 [tool.setuptools.packages.find]
 where = ["sw_core_data_types/src"]
 include = ["sw_core.*"]
