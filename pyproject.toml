@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sw_core"
-version = "0.0.0"
+version = "0.0.1"
 authors = [
   { name="StudioWEngineers", email="studio.w.engineers@gmail.com" },
 ]
@@ -16,6 +16,9 @@ dependencies = ["numpy"]
 
 [tool.setuptools]
 include-package-data = false
+
+[tool.setuptools.package-data]
+"sw_core_data_types" = ["py.typed"]
 
 [tool.setuptools.packages.find]
 where = ["sw_core_data_types/src"]
