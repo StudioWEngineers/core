@@ -22,13 +22,11 @@ __status__ "Alpha"
 """
 # standard library imports
 from json import dumps, loads
-from types import NoneType
 from typing import Any
 
 # third party library imports
 
 # local library specific imports
-from utilities.logger import Logger  # type: ignore
 
 
 class Parameters:
@@ -68,7 +66,7 @@ class Parameters:
 
         if self.has(key):
             warn_msg = f"Key \"{key}\" already exists and it will be overwritten!"
-            Logger.print_warning("Parameters", warn_msg)
+            print("Parameters" + warn_msg)
 
         self.params.update({key: Parameters._create_base_parameters(None)})
 
@@ -83,7 +81,7 @@ class Parameters:
 
         if self.has(key):
             warn_msg = f"Key \"{key}\" already exists and it will be overwritten!"
-            Logger.print_warning("Parameters", warn_msg)
+            print("Parameters" + warn_msg)
 
         self.params.update({key: Parameters._create_base_parameters(val)})
 
@@ -378,7 +376,7 @@ class Parameters:
         parameters = loads(input_stream)
         if not isinstance(parameters, dict):
             warn_msg = "The provided input stream is empty and so the Parameters object."
-            Logger.print_warning("Parameters", warn_msg)
+            print("Parameters" + warn_msg)
 
         obj = cls()
         obj.params = obj._create_dict_parameters(parameters)
