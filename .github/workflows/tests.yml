@@ -33,6 +33,10 @@ jobs:
     - name: Install package
       run: python -m pip install -e .[test]
 
-    - name: Run package tests
+    - name: Run sw_core_data_types package tests
       run: |
         python -m unittest discover --verbose sw_core_data_types\src\sw_core
+
+    - name: Run sw_core_parameters package tests
+      run: |
+        python -m unittest discover --verbose sw_core_parameters\src\sw_core
