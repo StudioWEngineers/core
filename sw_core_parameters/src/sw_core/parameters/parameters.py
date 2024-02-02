@@ -10,11 +10,15 @@ It provides methods to:
     - complete check (keys and type) of hardcoded default parameters;
     - add missing parameters when comparing to hardcoded default parameters.
 
-__author__ = "Massimiliano Zecchetto"
-__version__ = "1.0.0"
-__maintainer__ = "Massimiliano Zecchetto"
-__email__ = "eng.massimiliano.zecchetto@gmail.com"
-__status__ "Release"
+__author__ = "Studio W Engineers"
+
+__version__ = "0.0.0-alpha.0"
+
+__maintainer__ = "Studio W Engineers"
+
+__email__ = "studio.w.engineers@gmail.com"
+
+__status__ "Alpha"
 """
 # standard library imports
 from json import dumps, loads
