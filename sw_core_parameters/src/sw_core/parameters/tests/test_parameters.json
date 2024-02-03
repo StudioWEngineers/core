@@ -1,0 +1,11 @@
+{
+    "inputs": {
+        "string": "string",
+        "int": 0,
+        "sub_parameters": {
+            "string": "string",
+            "bool": false
+        },
+        "empty_sub_parameters": {}
+    }
+}
