@@ -27,8 +27,21 @@ from typing import Dict
 # third party library imports
 
 # local library specific imports
+from ._aux.bool import _Bool
+from ._aux.float import _Float
+from ._aux.int import _Int
+from ._aux.list import _List
+from ._aux.
 
-PARAMETERS = Dict[str, "Parameters"]
+#BoolParam = Dict[str, _Bool]
+#DictParam = Dict[str, "Parameters"]
+#EmptyParam = Dict[str, None]
+#FloatParam = Dict[str, _Float]
+#IntParam = Dict[str, _Int]
+#ListParam = Dict[str, _List]
+#StrParam = Dict[str, "_Str"]
+#AllParam = BoolParam | DictParam | EmptyParam | FloatParam | IntParam | ListParam | StrParam
+BasicTypes = _Bool | "Parameters" | None | _Float | _Int
 
 
 class Parameters:
@@ -39,13 +52,13 @@ class Parameters:
         be the default construtor, that is, the `create_from_input_string` method.
         """
         # Contains the elemental Parameters and it's empty if the Parameters is elemental.
-        self.params: dict[str, PARAMETERS] = {}
+        self.params: dict[str, BasicTypes] = {}
 
         # Contain the value and the type of an elemental Parameters.
-        self.val: bool | float | list[PARAMETERS] | int | None | str = None
-        self.type_ = type(None)
+        # self.val: bool | float | list[PARAMETERS] | int | None | str = None
+        # self.type_ = type(None)
 
-    def __getitem__(self, key: str) -> PARAMETERS:
+    def __getitem__(self, key: str) -> BasicTypes:
         """Returns a `Parameters` instance with the given key.
         """
         if not self.has(key):
@@ -488,20 +501,88 @@ class Parameters:
         """
         result = {}
         for key, value in input.items():
-            if isinstance(value, (bool, float, int, str, type(None))):
-                result.update({key: Parameters._create_base_parameters(value)})
+            if not isinstance(key, str):
+                raise RuntimeError
 
-            elif isinstance(value, dict):
-                new_result = Parameters._create_dict_parameters(input[key])
-                result.update({key: Parameters._from_parameters(new_result)})
+            #TODO: I should use match here
+            if isinstance(value, bool):
+                result.update({key: _Bool(value)})
+
+            elif isinstance(value, float):
+                result.update({key: _Float(value)})
+
+            elif isinstance(value, int):
+                result.update({key: _Int(value)})
+
+            elif isinstance(value, str):
+                result.update({key: _Str(value)})
 
             elif isinstance(value, list):
-                result.update({key: Parameters._create_array_parameters(value)})
+                result.update({key: _List(value)})
+            #if isinstance(value, (bool, float, int, str, type(None))):
+            #    result.update({key: Parameters._create_base_parameters(value)})
 
-            else:
-                err_msg = ("\"Parameters\" object accepts values of type \"bool\", "
-                           "\"dict\", \"float\", \"int\", \"list\", \"NoneType\" or "
-                           f"\"str\". Provided of type \"{type(value)}\".")
-                raise TypeError(err_msg)
+            #elif isinstance(value, dict):
+            #    new_result = Parameters._create_dict_parameters(input[key])
+            #    result.update({key: Parameters._from_parameters(new_result)})
+
+            #elif isinstance(value, list):
+            #    result.update({key: Parameters._create_array_parameters(value)})
+
+            #else:
+            #    err_msg = ("\"Parameters\" object accepts values of type \"bool\", "
+            #               "\"dict\", \"float\", \"int\", \"list\", \"NoneType\" or "
+            #               f"\"str\". Provided of type \"{type(value)}\".")
+            #    raise TypeError(err_msg)
 
         return result
+
+
+class _Float:
+    """
+    """
+    def __init__(self, value: float) -> None:
+        """pass
+        """
+        if not isinstance(value, float):
+            raise RuntimeError
+
+        self._val = value
+        self._type = float
+
+class _Int:
+    """
+    """
+    def __init__(self, value: int) -> None:
+        """pass
+        """
+        if not isinstance(value, int):
+            raise RuntimeError
+
+        self._val = value
+        self._type = int
+
+
+class _List:
+    """
+    """
+    def __init__(self, value) -> None:
+        """pass
+        """
+        if not isinstance(value, list):
+            raise RuntimeError
+
+        self._val = value
+
+
+class _Str:
+    """
+    """
+    def __init__(self, value) -> None:
+        """pass
+        """
+        if not isinstance(value, str):
+            raise RuntimeError
+
+        self._val = value
+        self._type = str
