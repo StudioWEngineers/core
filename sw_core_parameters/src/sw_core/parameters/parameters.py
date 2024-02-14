@@ -171,6 +171,12 @@ class Parameters:
         """
         return isinstance(self.val, str)
 
+    def is_sub_parameter(self) -> bool:
+        """Checks if the provided input is an instance of the `Parameters` class and if
+        the corresponding `self.params` is not empty.
+        """
+        return isinstance(self, Parameters) and bool(self.params)
+
     def items(self) -> list[tuple[str, "Parameters"]]:
         """Returns the items of the current `Parameters`.
         """
@@ -312,7 +318,7 @@ class Parameters:
             if not self.has(key_d):
                 self.add_value(key_d, val_d.val)
 
-            elif recursive and val_d._is_sub_parameter():
+            elif recursive and val_d.is_sub_parameter():
                 self.params[key_d].recursively_validate_and_assign_defaults(val_d)
 
     def values(self) -> list["Parameters"]:
@@ -334,7 +340,7 @@ class Parameters:
         TypeError if the provided input is not of a `Parameters` type or if it is an
         elemental `Parameters`.
         """
-        if not self._is_sub_parameter():
+        if not self.is_sub_parameter():
             err_msg = (f"\"{fct_name}\" can only be used if the value is of "
                        "\"Parameter\" type.")
             raise TypeError(err_msg)
@@ -348,12 +354,6 @@ class Parameters:
             raise TypeError(f"Argument must be a {exp_type_str}!")
 
         return self.val
-
-    def _is_sub_parameter(self) -> bool:
-        """Checks if the provided input is an instance of the `Parameters` class and if
-        the corresponding `self.params` is not empty.
-        """
-        return isinstance(self, Parameters) and bool(self.params)
 
     def _set(self, val: bool | float | list[PARAMETERS] | int | str) -> None:
         """Sets the content of an elemental `Parameters`.
@@ -445,7 +445,7 @@ class Parameters:
         """
         list_of_param = []
         for item in data.get_array():
-            if item._is_sub_parameter():
+            if item.is_sub_parameter():
                 list_of_param.append(Parameters._aux_print_parameters(item))
 
             elif item.is_array():
@@ -463,7 +463,7 @@ class Parameters:
         """
         result = {}
         for key, val in data.items():
-            if val._is_sub_parameter():
+            if val.is_sub_parameter():
                 result.update({key: Parameters._aux_print_parameters(val.params)})
 
             elif val.is_array():
