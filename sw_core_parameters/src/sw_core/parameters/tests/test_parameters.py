@@ -189,7 +189,7 @@ class ParametersTests(unittest.TestCase):
         """
         file_to_open = Path(__file__).parent / "test_empty_parameters.json"
 
-        with open(file_to_open, 'r') as parameter_file:
+        with open(file_to_open, 'r', encoding = "utf-8") as parameter_file:
             parameters = Parameters.create_from_input_stream(parameter_file.read())
 
         self.assertEqual(parameters.is_sub_parameter(), False)
@@ -199,7 +199,7 @@ class ParametersTests(unittest.TestCase):
         """
         file_to_open = Path(__file__).parent / "test_parameters.json"
 
-        with open(file_to_open, 'r') as parameter_file:
+        with open(file_to_open, 'r', encoding = "utf-8") as parameter_file:
             parameters = Parameters.create_from_input_stream(parameter_file.read())
 
         # check empty sub parameters
