@@ -741,12 +741,12 @@ class ParametersTests(unittest.TestCase):
             "empty": {}
         }""")
 
-        input = ("""{
+        data = ("""{
             "int": 1
         }""")
 
         default_param = Parameters.create_from_input_stream(default_input)
-        param = Parameters.create_from_input_stream(input)
+        param = Parameters.create_from_input_stream(data)
         param.validate_and_assign_defaults(default_param)
 
         with self.subTest():
