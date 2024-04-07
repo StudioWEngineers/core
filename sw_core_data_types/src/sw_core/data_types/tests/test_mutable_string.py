@@ -7,7 +7,7 @@ Tests for the `MutableString` class.
 
 __author__ = "Studio W Engineers"
 
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 
 __maintainer__ = "Studio W Engineers"
 
