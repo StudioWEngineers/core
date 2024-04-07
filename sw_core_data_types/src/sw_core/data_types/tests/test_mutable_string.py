@@ -123,6 +123,14 @@ class MutableStringTestSuite(unittest.TestCase):
 
         self.assertEqual(string, "abc")
 
+    def test_lstrip(self) -> None:
+        """Tests for the `lstrip` method.
+        """
+        string = MutableString("  ABC")
+        string.lstrip()
+
+        self.assertEqual(string, "ABC")
+
     def test_multiplication(self) -> None:
         """Tests for the `__mul__` method.
         """
