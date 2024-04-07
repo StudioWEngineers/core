@@ -136,6 +136,14 @@ class MutableStringTestSuite(unittest.TestCase):
         """
         self.assertEqual(MutableString("ABC") * 3, "ABCABCABC")
 
+    def test_rstrip(self) -> None:
+        """Tests for the `rstrip` method.
+        """
+        string = MutableString("  ABC  ")
+        string.rstrip()
+
+        self.assertEqual(string, "  ABC")
+
     def test_to_string_method(self) -> None:
         """Test for the `to_string` method.
         """
