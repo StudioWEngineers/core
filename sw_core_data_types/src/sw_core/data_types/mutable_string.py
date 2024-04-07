@@ -10,7 +10,7 @@ class provides.
 
 __author__ = "Studio W Engineers"
 
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 
 __maintainer__ = "Studio W Engineers"
 
@@ -109,6 +109,16 @@ class MutableString:
         """Convert the string to lowercase.
         """
         self._data = self._data.lower()
+
+    def lstrip(self) -> None:
+        """Remove leading whitespaces.
+        """
+        self._data = self._data.lstrip()
+
+    def rstrip(self) -> None:
+        """Remove trailing whitespaces.
+        """
+        self._data = self._data.rstrip()
 
     def split(self, sep: str | None = None, maxsplit: int = -1) -> list[str]:
         """Return a list of the substrings in the string, using `sep` as string separator.

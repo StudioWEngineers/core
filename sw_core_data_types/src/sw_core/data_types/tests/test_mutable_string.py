@@ -7,7 +7,7 @@ Tests for the `MutableString` class.
 
 __author__ = "Studio W Engineers"
 
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 
 __maintainer__ = "Studio W Engineers"
 
@@ -123,10 +123,26 @@ class MutableStringTestSuite(unittest.TestCase):
 
         self.assertEqual(string, "abc")
 
+    def test_lstrip(self) -> None:
+        """Tests for the `lstrip` method.
+        """
+        string = MutableString("  ABC")
+        string.lstrip()
+
+        self.assertEqual(string, "ABC")
+
     def test_multiplication(self) -> None:
         """Tests for the `__mul__` method.
         """
         self.assertEqual(MutableString("ABC") * 3, "ABCABCABC")
+
+    def test_rstrip(self) -> None:
+        """Tests for the `rstrip` method.
+        """
+        string = MutableString("  ABC  ")
+        string.rstrip()
+
+        self.assertEqual(string, "  ABC")
 
     def test_to_string_method(self) -> None:
         """Test for the `to_string` method.
