@@ -6,6 +6,7 @@
             "string": "string",
             "bool": false
         },
+        "list": [0, 1, 2],
         "empty_sub_parameters": {}
     }
 }

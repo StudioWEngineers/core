@@ -21,7 +21,7 @@ from pathlib import Path
 # third party library imports
 
 # local library specific imports
-from ..parameters import Parameters
+from ..parameters3 import Parameters
 
 
 class ParametersTests(unittest.TestCase):
