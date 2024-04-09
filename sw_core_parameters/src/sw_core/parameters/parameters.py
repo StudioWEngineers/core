@@ -331,7 +331,7 @@ class Parameters:
         TypeError if the provided input is not of a `Parameters` type or if it is an
         elemental `Parameters`.
         """
-        if not self._is_sub_parameter():
+        if not self.is_sub_parameter():
             err_msg = (f"\"{fct_name}\" can only be used if the value is of "
                        "\"Parameter\" type.")
             raise TypeError(err_msg)
