@@ -41,7 +41,6 @@ class Parameters:
 
         # Contain the value and the type of an elemental Parameters.
         self.val: bool | float | list[Parameters] | int | None | str = None
-        self.type_ = type(None)
 
     def __getitem__(self, key: str) -> "Parameters":
         """Returns a `Parameters` instance with the given key.
@@ -256,7 +255,7 @@ class Parameters:
         """Returns the length of the array.
         """
         if not self.is_array():
-            err_msg = f"\"size\" method works only with arrays! Got a \"{self.type_}\"!"
+            err_msg = f"\"size\" method works only with arrays! Got a \"{type(self.val)}\"!"
             raise TypeError(err_msg)
 
         return len(self.get_array())
@@ -292,11 +291,11 @@ class Parameters:
                 raise RuntimeError(err_msg)
 
             # check if the type is the same in the defaults
-            if self.params[key].type_ != defaults[key].type_:
+            if type(self.params[key]) != type(defaults[key]):
                 err_msg = (f"The item with key \"{key}\" is of type "
-                           f"\"{self.params[key].type_}\" in this settings,"
+                           f"\"{type(self.params[key])}\" in this settings,"
                            f" but in the defaults is of type "
-                           f"\"{defaults[key].type_}\". "
+                           f"\"{type(defaults[key])}\". "
                            f"Current settings are:\n"
                            f"{self.pretty_print_json_string()}\n"
                            f"Current defaults are:\n"
@@ -357,7 +356,6 @@ class Parameters:
         """Sets the content of an elemental `Parameters`.
         """
         self.val = val
-        self.type_ = type(val)
 
     @classmethod
     def create_from_input_stream(cls, input_stream: str) -> "Parameters":
@@ -406,7 +404,6 @@ class Parameters:
 
         obj = cls()
         obj.val = list_of_param
-        obj.type_ = type(list_of_param)
 
         return obj
 
@@ -418,7 +415,6 @@ class Parameters:
         """
         obj = cls()
         obj.val = val
-        obj.type_ = type(val)
 
         return obj
 
