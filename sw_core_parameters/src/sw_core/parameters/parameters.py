@@ -408,8 +408,10 @@ class Parameters:
         return obj
 
     @classmethod
-    def _create_base_parameters(cls,
-                                val: bool | float | list["Parameters"] | int | None | str) -> "Parameters":
+    def _create_base_parameters(
+        cls,
+        val: bool | float | list["Parameters"] | int | None | str
+    ) -> "Parameters":
         """A private constructor of the `Parameters` class. It is used only when elemental
         `Parameters` are to be created.
         """
