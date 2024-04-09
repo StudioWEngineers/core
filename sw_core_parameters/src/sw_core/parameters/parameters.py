@@ -437,12 +437,12 @@ class Parameters:
         return obj
 
     @staticmethod
-    def _aux_print_array_parameters(input: "Parameters") -> list[Any]:
+    def _aux_print_array_parameters(data: "Parameters") -> list[Any]:
         """Returns a list with the same values of the original `Parameters` as immutable
         Python objects.
         """
         list_of_param = []
-        for item in input.get_array():
+        for item in data.get_array():
             if item._is_sub_parameter():
                 list_of_param.append(Parameters._aux_print_parameters(item))
 
@@ -455,12 +455,12 @@ class Parameters:
         return list_of_param
 
     @staticmethod
-    def _aux_print_parameters(input: dict[str, "Parameters"]) -> dict[str, Any]:
+    def _aux_print_parameters(data: dict[str, "Parameters"]) -> dict[str, Any]:
         """Returns a dictionary with the same keys and values of the original `Parameters`
         as immutable Python objects.
         """
         result = {}
-        for key, val in input.items():
+        for key, val in data.items():
             if val._is_sub_parameter():
                 result.update({key: Parameters._aux_print_parameters(val.params)})
 
@@ -479,18 +479,18 @@ class Parameters:
         return result
 
     @staticmethod
-    def _create_dict_parameters(input: dict[str, Any]) -> dict[str, "Parameters"]:
+    def _create_dict_parameters(data: dict[str, Any]) -> dict[str, "Parameters"]:
         """A private constructor of the `Parameters` class. It fills the `params`
         dictionary with keys taken from input stream and `Parameters` objects having
         values from the same input stream.
         """
         result = {}
-        for key, value in input.items():
+        for key, value in data.items():
             if isinstance(value, (bool, float, int, str, type(None))):
                 result.update({key: Parameters._create_base_parameters(value)})
 
             elif isinstance(value, dict):
-                new_result = Parameters._create_dict_parameters(input[key])
+                new_result = Parameters._create_dict_parameters(data[key])
                 result.update({key: Parameters._from_parameters(new_result)})
 
             elif isinstance(value, list):
