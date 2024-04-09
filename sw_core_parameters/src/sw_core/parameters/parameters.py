@@ -40,7 +40,7 @@ class Parameters:
         self.params: dict[str, Parameters] = {}
 
         # Contain the value and the type of an elemental Parameters.
-        self.val: bool | float | list[Any] | int | None | str = None
+        self.val: bool | float | list[Parameters] | int | None | str = None
         self.type_ = type(None)
 
     def __getitem__(self, key: str) -> "Parameters":
@@ -72,7 +72,7 @@ class Parameters:
 
     def add_value(self,
                   key: str,
-                  val: bool | float | int | None | str) -> None:
+                  val: bool | float | list["Parameters"] | int | None | str) -> None:
         """Adds an item to an existing `Parameters` with the provided `key` and `val`.
         """
         if not isinstance(key, str):
@@ -353,7 +353,7 @@ class Parameters:
         """
         return isinstance(self, Parameters) and bool(self.params)
 
-    def _set(self, val: bool | float | list[Any] | int | str) -> None:
+    def _set(self, val: bool | float | list["Parameters"] | int | None | str) -> None:
         """Sets the content of an elemental `Parameters`.
         """
         self.val = val
