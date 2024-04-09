@@ -30,7 +30,7 @@ class ParametersTests(unittest.TestCase):
     def setUp(self) -> None:
         """Creates a `Parameters` object to be used for all the tests.
         """
-        inputs_for_testing = ("""{
+        inputs_for_testing = """{
             "string_input": "my_string",
             "float_input": 1.1,
             "int_input": 1,
@@ -69,7 +69,7 @@ class ParametersTests(unittest.TestCase):
             },
             "bool_input": true,
             "empty_input": null
-        }""")
+        }"""
         self.parameters = Parameters.create_from_input_stream(inputs_for_testing)
 
     def test_add_empty_value(self) -> None:
@@ -189,7 +189,7 @@ class ParametersTests(unittest.TestCase):
         """
         file_to_open = Path(__file__).parent / "test_empty_parameters.json"
 
-        with open(file_to_open, 'r') as parameter_file:
+        with open(file_to_open, 'r', encoding = "UTF-8") as parameter_file:
             parameters = Parameters.create_from_input_stream(parameter_file.read())
 
         self.assertEqual(parameters._is_sub_parameter(), False)
@@ -199,7 +199,7 @@ class ParametersTests(unittest.TestCase):
         """
         file_to_open = Path(__file__).parent / "test_parameters.json"
 
-        with open(file_to_open, 'r') as parameter_file:
+        with open(file_to_open, 'r', encoding = "UTF-8") as parameter_file:
             parameters = Parameters.create_from_input_stream(parameter_file.read())
 
         # check empty sub parameters
@@ -736,17 +736,17 @@ class ParametersTests(unittest.TestCase):
     def test_null_entry_values(self) -> None:
         """Tests the addition of empty entry in the `validate_and_assign_default` method.
         """
-        default_input = ("""{
+        default_input = """{
             "int": 1,
             "empty": {}
-        }""")
+        }"""
 
-        input = ("""{
+        new_input = """{
             "int": 1
-        }""")
+        }"""
 
         default_param = Parameters.create_from_input_stream(default_input)
-        param = Parameters.create_from_input_stream(input)
+        param = Parameters.create_from_input_stream(new_input)
         param.validate_and_assign_defaults(default_param)
 
         with self.subTest():
@@ -758,7 +758,7 @@ class ParametersTests(unittest.TestCase):
         """Tests the `test_pretty_print_json_string` method.
         """
         with self.subTest():
-            param = ("""{
+            param = """{
                 "string": "my_string",
                 "float_input": 1.1,
                 "dict_input": {
@@ -768,7 +768,7 @@ class ParametersTests(unittest.TestCase):
                         "sub_sub_int_input": 100
                         }
                 }
-            }""")
+            }"""
 
             parameters = Parameters.create_from_input_stream(param)
             expected_string = ("{\n    \"string\": \"my_string\",\n    "
@@ -824,7 +824,7 @@ class ParametersTests(unittest.TestCase):
         """
         # These params are the almost the same defined in setUp, but without
         # sub_list_input and sub_sub_float_input.
-        params = ("""{
+        params = """{
             "string_input": "my_string",
             "float_input": 1.1,
             "int_input": 1,
@@ -845,7 +845,7 @@ class ParametersTests(unittest.TestCase):
             },
             "bool_input": true,
             "empty_input": null
-        }""")
+        }"""
 
         # Using the self.parameters as default to avoid modification on other tests.
         new_params = Parameters.create_from_input_stream(params)
@@ -1032,7 +1032,7 @@ class ParametersTests(unittest.TestCase):
         """Tests the `validate_and_assign_default` method.
         """
         # These params are the almost the same defined in setUp, but without bool_input
-        params = ("""{
+        params = """{
             "string_input": "my_string",
             "float_input": 1.1,
             "int_input": 1,
@@ -1054,7 +1054,7 @@ class ParametersTests(unittest.TestCase):
                 "sub_empty_input": null
             },
             "empty_input": null
-        }""")
+        }"""
 
         # Using the self.parameters as default to avoid modification on other tests.
         new_parameters = Parameters.create_from_input_stream(params)
