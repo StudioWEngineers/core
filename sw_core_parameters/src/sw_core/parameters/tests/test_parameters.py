@@ -6,13 +6,13 @@ This module aims at providing extensive testing for the `Parameters` class.
 
 __author__ = "Studio W Engineers"
 
-__version__ = "0.0.0-alpha.0"
+__version__ = "0.0.0"
 
 __maintainer__ = "Studio W Engineers"
 
 __email__ = "studio.w.engineers@gmail.com"
 
-__status__ "Alpha"
+__status__ "Release"
 """
 # standard library imports
 import unittest
