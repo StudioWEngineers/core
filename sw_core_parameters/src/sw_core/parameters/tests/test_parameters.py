@@ -752,7 +752,7 @@ class ParametersTests(unittest.TestCase):
         with self.subTest():
             self.assertEqual(default_param["empty"].is_null(), True)
 
-            self.assertEqual(param["empty"].type_, default_param["empty"].type_)
+            self.assertEqual(type(param["empty"]), type(default_param["empty"]))
 
     def test_pretty_print_json_string(self) -> None:
         """Tests the `test_pretty_print_json_string` method.
