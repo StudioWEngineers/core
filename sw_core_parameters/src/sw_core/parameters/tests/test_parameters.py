@@ -6,13 +6,13 @@ This module aims at providing extensive testing for the `Parameters` class.
 
 __author__ = "Studio W Engineers"
 
-__version__ = "0.0.0-alpha.0"
+__version__ = "0.0.0"
 
 __maintainer__ = "Studio W Engineers"
 
 __email__ = "studio.w.engineers@gmail.com"
 
-__status__ "Alpha"
+__status__ "Release"
 """
 # standard library imports
 import unittest
@@ -30,7 +30,7 @@ class ParametersTests(unittest.TestCase):
     def setUp(self) -> None:
         """Creates a `Parameters` object to be used for all the tests.
         """
-        inputs_for_testing = ("""{
+        inputs_for_testing = """{
             "string_input": "my_string",
             "float_input": 1.1,
             "int_input": 1,
@@ -69,7 +69,7 @@ class ParametersTests(unittest.TestCase):
             },
             "bool_input": true,
             "empty_input": null
-        }""")
+        }"""
         self.parameters = Parameters.create_from_input_stream(inputs_for_testing)
 
     def test_add_empty_value(self) -> None:
@@ -82,7 +82,7 @@ class ParametersTests(unittest.TestCase):
 
             self.assertEqual(self.parameters["new_empty_item"].is_null(), True)
 
-            self.assertEqual(self.parameters["new_empty_item"]._is_sub_parameter(), False)
+            self.assertEqual(self.parameters["new_empty_item"].is_sub_parameter(), False)
 
     def test_add_empty_value_nested(self) -> None:
         """Tests the `add_empty_item` method in nested `Parameters` objects.
@@ -167,14 +167,14 @@ class ParametersTests(unittest.TestCase):
         self.parameters.add_value("new_empty_item", """{}""")
 
         with self.subTest():
-            self.assertEqual(self.parameters["new_empty_item"]._is_sub_parameter(), False)
+            self.assertEqual(self.parameters["new_empty_item"].is_sub_parameter(), False)
 
             self.assertEqual("new_empty_item" in self.parameters.keys(), True)
 
             self.parameters["new_empty_item"].add_value("string", "string")
             self.parameters["new_empty_item"].add_value("int", 1)
 
-            self.assertEqual(self.parameters["new_empty_item"]._is_sub_parameter(), True)
+            self.assertEqual(self.parameters["new_empty_item"].is_sub_parameter(), True)
 
             self.assertEqual("string" in self.parameters["new_empty_item"].keys(), True)
 
@@ -189,23 +189,23 @@ class ParametersTests(unittest.TestCase):
         """
         file_to_open = Path(__file__).parent / "test_empty_parameters.json"
 
-        with open(file_to_open, 'r') as parameter_file:
+        with open(file_to_open, 'r', encoding = "UTF-8") as parameter_file:
             parameters = Parameters.create_from_input_stream(parameter_file.read())
 
-        self.assertEqual(parameters._is_sub_parameter(), False)
+        self.assertEqual(parameters.is_sub_parameter(), False)
 
     def test_create_parameters_from_json(self) -> None:
         """Tests the creation of a `Parameters` from json file.
         """
         file_to_open = Path(__file__).parent / "test_parameters.json"
 
-        with open(file_to_open, 'r') as parameter_file:
+        with open(file_to_open, 'r', encoding = "UTF-8") as parameter_file:
             parameters = Parameters.create_from_input_stream(parameter_file.read())
 
         # check empty sub parameters
         with self.subTest():
             self.assertEqual(
-                parameters["inputs"]["empty_sub_parameters"]._is_sub_parameter(), False)
+                parameters["inputs"]["empty_sub_parameters"].is_sub_parameter(), False)
 
             self.assertEqual(parameters["inputs"]["int"].get_int(), 0)
 
@@ -531,9 +531,9 @@ class ParametersTests(unittest.TestCase):
         """Tests the `_if_sub_parameter` method.
         """
         with self.subTest():
-            self.assertEqual(self.parameters["dict_input"]._is_sub_parameter(), True)
+            self.assertEqual(self.parameters["dict_input"].is_sub_parameter(), True)
 
-            self.assertEqual(self.parameters["int_input"]._is_sub_parameter(), False)
+            self.assertEqual(self.parameters["int_input"].is_sub_parameter(), False)
 
     def test_is_sub_parameter_nested(self) -> None:
         """Tests the `_if_sub_parameter` method in nested `Parameters` objects.
@@ -541,11 +541,11 @@ class ParametersTests(unittest.TestCase):
         with self.subTest():
             # test on the first level of nesting
             self.assertEqual(self.parameters["dict_input"]
-                                            ["sub_dict_input"]._is_sub_parameter(), True)
+                                            ["sub_dict_input"].is_sub_parameter(), True)
 
             # test on the second level of nesting
             self.assertEqual(self.parameters["dict_input"]
-                                            ["sub_int_input"]._is_sub_parameter(), False)
+                                            ["sub_int_input"].is_sub_parameter(), False)
 
     def test_is_sub_parameter_with_empty_parameters(self) -> None:
         """Tests `_if_sub_parameter` method in case of an empty `Parameters` object.
@@ -556,7 +556,7 @@ class ParametersTests(unittest.TestCase):
         """
         empty_params = Parameters.create_from_input_stream("""{}""")
 
-        self.assertEqual(empty_params._is_sub_parameter(), False)
+        self.assertEqual(empty_params.is_sub_parameter(), False)
 
     def test_items(self) -> None:
         """Tests the `items` method in `Parameters` objects.
@@ -736,29 +736,29 @@ class ParametersTests(unittest.TestCase):
     def test_null_entry_values(self) -> None:
         """Tests the addition of empty entry in the `validate_and_assign_default` method.
         """
-        default_input = ("""{
+        default_input = """{
             "int": 1,
             "empty": {}
-        }""")
+        }"""
 
-        input = ("""{
+        new_input = """{
             "int": 1
-        }""")
+        }"""
 
         default_param = Parameters.create_from_input_stream(default_input)
-        param = Parameters.create_from_input_stream(input)
+        param = Parameters.create_from_input_stream(new_input)
         param.validate_and_assign_defaults(default_param)
 
         with self.subTest():
             self.assertEqual(default_param["empty"].is_null(), True)
 
-            self.assertEqual(param["empty"].type_, default_param["empty"].type_)
+            self.assertEqual(type(param["empty"]), type(default_param["empty"]))
 
     def test_pretty_print_json_string(self) -> None:
         """Tests the `test_pretty_print_json_string` method.
         """
         with self.subTest():
-            param = ("""{
+            param = """{
                 "string": "my_string",
                 "float_input": 1.1,
                 "dict_input": {
@@ -768,7 +768,7 @@ class ParametersTests(unittest.TestCase):
                         "sub_sub_int_input": 100
                         }
                 }
-            }""")
+            }"""
 
             parameters = Parameters.create_from_input_stream(param)
             expected_string = ("{\n    \"string\": \"my_string\",\n    "
@@ -824,7 +824,7 @@ class ParametersTests(unittest.TestCase):
         """
         # These params are the almost the same defined in setUp, but without
         # sub_list_input and sub_sub_float_input.
-        params = ("""{
+        params = """{
             "string_input": "my_string",
             "float_input": 1.1,
             "int_input": 1,
@@ -845,7 +845,7 @@ class ParametersTests(unittest.TestCase):
             },
             "bool_input": true,
             "empty_input": null
-        }""")
+        }"""
 
         # Using the self.parameters as default to avoid modification on other tests.
         new_params = Parameters.create_from_input_stream(params)
@@ -1032,7 +1032,7 @@ class ParametersTests(unittest.TestCase):
         """Tests the `validate_and_assign_default` method.
         """
         # These params are the almost the same defined in setUp, but without bool_input
-        params = ("""{
+        params = """{
             "string_input": "my_string",
             "float_input": 1.1,
             "int_input": 1,
@@ -1054,7 +1054,7 @@ class ParametersTests(unittest.TestCase):
                 "sub_empty_input": null
             },
             "empty_input": null
-        }""")
+        }"""
 
         # Using the self.parameters as default to avoid modification on other tests.
         new_parameters = Parameters.create_from_input_stream(params)
