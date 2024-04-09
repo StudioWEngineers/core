@@ -338,7 +338,7 @@ class Parameters:
 
     def _get(self,
              cmp_fct: bool,
-             exp_type_str: str) -> bool | float | list[Any] | int | None | str:
+             exp_type_str: str) -> bool | float | list["Parameters"] | int | None | str:
         """Performs type check and returns the content if the type matches.
         """
         if not cmp_fct:
@@ -409,7 +409,7 @@ class Parameters:
 
     @classmethod
     def _create_base_parameters(cls,
-                                val: bool | float | int | str | None) -> "Parameters":
+                                val: bool | float | list["Parameters"] | int | None | str) -> "Parameters":
         """A private constructor of the `Parameters` class. It is used only when elemental
         `Parameters` are to be created.
         """
