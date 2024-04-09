@@ -291,7 +291,7 @@ class Parameters:
                 raise RuntimeError(err_msg)
 
             # check if the type is the same in the defaults
-            if type(self.params[key]) != type(defaults[key]):
+            if isinstance(type(self.params[key]), type(defaults[key])):
                 err_msg = (f"The item with key \"{key}\" is of type "
                            f"\"{type(self.params[key])}\" in this settings,"
                            f" but in the defaults is of type "
