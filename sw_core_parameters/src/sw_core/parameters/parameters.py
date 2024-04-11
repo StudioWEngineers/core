@@ -255,7 +255,7 @@ class Parameters:
         """Returns the length of the array.
         """
         if not self.is_array():
-            err_msg = f"\"size\" method works only with arrays! Got a \"{type(self.val)}\"!"
+            err_msg = f"\"size\" method works only with arrays! Got \"{type(self.val)}\"!"
             raise TypeError(err_msg)
 
         return len(self.get_array())
