@@ -186,7 +186,7 @@ class Parameters:
         """This method returns a string equivalent to the `Parameters` object and the
         *.json file. It considers tabulations.
         """
-        return dumps(self._serialize(self.params), indent=4)
+        return dumps(self._aux_print_parameters(self.params), indent=4)
 
     def recursively_validate_and_assign_defaults(self, defaults: "Parameters") -> None:
         """Recursive call of the `validate_and_assign_defaults` method.
@@ -435,6 +435,48 @@ class Parameters:
         return obj
 
     @staticmethod
+    def _aux_print_array_parameters(data: "Parameters") -> list[Any]:
+        """Returns a list with the same values of the original `Parameters` as immutable
+        Python objects.
+        """
+        list_of_param = []
+        for item in data.get_array():
+            if item.is_sub_parameter():
+                list_of_param.append(Parameters._aux_print_parameters(item))
+
+            elif item.is_array():
+                list_of_param.append(Parameters._aux_print_array_parameters(item))
+
+            else:
+                list_of_param.append(item.val)
+
+        return list_of_param
+
+    @staticmethod
+    def _aux_print_parameters(data: dict[str, "Parameters"]) -> dict[str, Any]:
+        """Returns a dictionary with the same keys and values of the original `Parameters`
+        as immutable Python objects.
+        """
+        result = {}
+        for key, val in data.items():
+            if val.is_sub_parameter():
+                result.update({key: Parameters._aux_print_parameters(val.params)})
+
+            elif val.is_array():
+                result.update({key: Parameters._aux_print_array_parameters(val)})
+
+            elif val.is_number() or val.is_bool() or val.is_string() or val.is_null():
+                result.update({key: val.val})
+
+            else:
+                err_msg = ("\"Parameters\" object accepts values of type \"bool\", "
+                           "\"dict\", \"float\", \"int\", \"list\", \"NoneType\" or "
+                           f"\"str\". Provided of type \"{type(val)}\".")
+                raise TypeError(err_msg)
+
+        return result
+
+    @staticmethod
     def _create_dict_parameters(data: dict[str, Any]) -> dict[str, "Parameters"]:
         """A private constructor of the `Parameters` class. It fills the `params`
         dictionary with keys taken from input stream and `Parameters` objects having
@@ -459,37 +501,3 @@ class Parameters:
                 raise TypeError(err_msg)
 
         return result
-
-    @staticmethod
-    def _serialize(parameter: dict[str, "Parameters"]) -> dict[str, str | list[str]]:
-        """
-        """
-        serialized_param: dict[str, str | list[str]] = {}
-        for key, value in parameter.items():
-            if isinstance(value.val, (bool | float | int | None | str)):
-                serialized_param.update({key: str(value.val)})
-
-            elif isinstance(value.val, list):
-                serialized_param.update({key: Parameters._serialize_array(value.val)})
-
-            elif isinstance(value.val, dict):
-                serialized_param.update({key: Parameters._serialize({key: value.val})})
-
-        return serialized_param
-
-    @staticmethod
-    def _serialize_array(list_of_parameters: list["Parameters"]) -> list[str]:
-        """
-        """
-        serialized_list = []
-        for item in list_of_parameters:
-            if isinstance(item.val, ( bool | float | int | None | str)):
-                serialized_list.append(str(item.val))
-
-            elif isinstance(item.val, list):
-                serialized_list = Parameters._serialize_array(item.val)
-
-            else:
-                raise TypeError
-
-        return serialized_list
