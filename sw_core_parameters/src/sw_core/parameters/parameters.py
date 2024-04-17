@@ -466,13 +466,13 @@ class Parameters:
         """
         serialized_param: dict[str, str | list[str]] = {}
         for key, value in parameter.items():
-            if isinstance(value.val, (bool | float | int | None | str)):
+            if isinstance(value.val, (bool | float | int | str)):
                 serialized_param.update({key: str(value.val)})
 
-            elif isinstance(value.val, list):
+            elif value.is_array():
                 serialized_param.update({key: Parameters._serialize_array(value.val)})
 
-            elif isinstance(value.val, dict):
+            elif value.is_sub_parameter():
                 serialized_param.update({key: Parameters._serialize({key: value.val})})
 
         return serialized_param
