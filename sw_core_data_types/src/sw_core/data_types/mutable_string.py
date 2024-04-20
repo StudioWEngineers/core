@@ -10,7 +10,7 @@ class provides.
 
 __author__ = "Studio W Engineers"
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __maintainer__ = "Studio W Engineers"
 
@@ -79,16 +79,25 @@ class MutableString:
     def __repr__(self) -> str:
         return self._data
 
-    def __setitem__(self, item: int, value: str) -> None:
+    def __setitem__(self, item: int | slice, value: str) -> None:
         if not isinstance(value, str):
             err_msg = (f"Set operation for MutableString objects is possible "
                        f"only with strings, given value of type \"{type(value)}\"!")
             raise RuntimeError(err_msg)
 
-        if not isinstance(item, int):
-            err_msg = ("Set operation for MutableString objects is not possible "
-                       "with slices!")
-            raise RuntimeError(err_msg)
+        if isinstance(item, slice):
+            if item.start >= len(self._data):
+                raise RuntimeError(f"Slice exceeds the string length: "
+                                   f"{item.start} >= {len(self._data)}!")
+
+            if item.stop > len(self._data):
+                raise RuntimeError(f"Slice exceeds the string length: "
+                                   f"{item.stop} > {len(self._data)}!")
+
+            self._data = (self._data[:item.start] +
+                          value +
+                          self._data[item.start + len(value):])
+            return
 
         if item == -1:
             item += len(self._data)
@@ -104,6 +113,22 @@ class MutableString:
         If Python >= 3.8: the first character is put into titlecase rather than uppercase.
         """
         self._data = self._data.capitalize()
+
+    def find(self, substr: str, start: int | None = None, end: int | None = None) -> int:
+        """Return the lowest index in the `MutableString` where `substr` is found, such
+        that `substr` is contained within `MutableString[start:end]`. Optional arguments
+        `start` and `end` are interpreted as in slice notation.
+
+        Parameters
+        ----------
+        start: int | None, optional default to None
+        end: int | None, optional default to None
+
+        Returns
+        -------
+            -1 on failure.
+        """
+        return self._data.find(substr, start, end)
 
     def lower(self) -> None:
         """Convert the string to lowercase.

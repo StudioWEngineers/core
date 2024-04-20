@@ -7,7 +7,7 @@ Tests for the `MutableString` class.
 
 __author__ = "Studio W Engineers"
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __maintainer__ = "Studio W Engineers"
 
@@ -62,6 +62,16 @@ class MutableStringTestSuite(unittest.TestCase):
         """Tests for the empty string.
         """
         self.assertEqual(MutableString(), "")
+
+    def test_find(self) -> None:
+        """Tests for the `find` method.
+        """
+        string = MutableString("first string")
+        with self.subTest():
+            self.assertEqual(string.find("in"), 9)
+
+        with self.subTest():
+            self.assertEqual(string.find("ci"), -1)
 
     def test_get_item_int(self) -> None:
         """Tests for the `__getitem__` method, with `int` input.
@@ -171,6 +181,25 @@ class MutableStringTestSuite(unittest.TestCase):
         with self.subTest():
             string[1] = "D"
             self.assertEqual(string, "1Dc")
+
+    def test_set_with_slice(self) -> None:
+        """Tests for the `__setitem__` method with slice.
+        """
+        string = MutableString("ABC CDE EFG")
+
+        with self.subTest():
+            string[0:2] = "123"
+            self.assertEqual(string, "123 CDE EFG")
+
+        with self.subTest():
+            string[1:3] = "   "
+            self.assertEqual(string, "1   CDE EFG")
+
+        with self.assertRaises(RuntimeError):
+            string[13:14] = "D"
+
+        with self.assertRaises(RuntimeError):
+            string[9:14] = "D"
 
     def test_split(self) -> None:
         """Tests for the `split` method.
