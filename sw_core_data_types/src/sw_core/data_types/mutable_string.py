@@ -105,6 +105,22 @@ class MutableString:
         """
         self._data = self._data.capitalize()
 
+    def find(self, substr: str, start: int | None = None, end: int | None = None) -> int:
+        """Return the lowest index in the `MutableString` where `substr` is found, such
+        that `substr` is contained within `MutableString[start:end]`. Optional arguments
+        `start` and `end` are interpreted as in slice notation.
+
+        Parameters
+        ----------
+        start: int | None, optional default to None
+        end: int | None, optional default to None
+
+        Returns
+        -------
+            -1 on failure.
+        """
+        return self._data.find(substr, start, end)
+
     def lower(self) -> None:
         """Convert the string to lowercase.
         """

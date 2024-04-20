@@ -63,6 +63,16 @@ class MutableStringTestSuite(unittest.TestCase):
         """
         self.assertEqual(MutableString(), "")
 
+    def test_find(self) -> None:
+        """Tests for the `find` method.
+        """
+        string = MutableString("first string")
+        with self.subTest():
+            self.assertEqual(string.find("in"), 9)
+
+        with self.subTest():
+            self.assertEqual(string.find("ci"), -1)
+
     def test_get_item_int(self) -> None:
         """Tests for the `__getitem__` method, with `int` input.
         """
