@@ -79,16 +79,25 @@ class MutableString:
     def __repr__(self) -> str:
         return self._data
 
-    def __setitem__(self, item: int, value: str) -> None:
+    def __setitem__(self, item: int | slice, value: str) -> None:
         if not isinstance(value, str):
             err_msg = (f"Set operation for MutableString objects is possible "
                        f"only with strings, given value of type \"{type(value)}\"!")
             raise RuntimeError(err_msg)
 
-        if not isinstance(item, int):
-            err_msg = ("Set operation for MutableString objects is not possible "
-                       "with slices!")
-            raise RuntimeError(err_msg)
+        if isinstance(item, slice):
+            if item.start >= len(self._data):
+                raise RuntimeError(f"Slice exceeds the string length: "
+                                   f"{item.start} >= {len(self._data)}!")
+
+            if item.stop > len(self._data):
+                raise RuntimeError(f"Slice exceeds the string length: "
+                                   f"{item.stop} > {len(self._data)}!")
+
+            self._data = (self._data[:item.start] +
+                          value +
+                          self._data[item.start + len(value):])
+            return
 
         if item == -1:
             item += len(self._data)

@@ -182,6 +182,25 @@ class MutableStringTestSuite(unittest.TestCase):
             string[1] = "D"
             self.assertEqual(string, "1Dc")
 
+    def test_set_with_slice(self) -> None:
+        """Tests for the `__setitem__` method with slice.
+        """
+        string = MutableString("ABC CDE EFG")
+
+        with self.subTest():
+            string[0:2] = "123"
+            self.assertEqual(string, "123 CDE EFG")
+
+        with self.subTest():
+            string[1:3] = "   "
+            self.assertEqual(string, "1   CDE EFG")
+
+        with self.assertRaises(RuntimeError):
+            string[13:14] = "D"
+
+        with self.assertRaises(RuntimeError):
+            string[9:14] = "D"
+
     def test_split(self) -> None:
         """Tests for the `split` method.
         """
