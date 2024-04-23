@@ -81,22 +81,26 @@ class MutableString:
 
     def __setitem__(self, item: int | slice, value: str) -> None:
         if not isinstance(value, str):
-            err_msg = (f"Set operation for MutableString objects is possible "
+            err_msg = ("Set operation for MutableString objects is possible "
                        f"only with strings, given value of type \"{type(value)}\"!")
             raise RuntimeError(err_msg)
 
         if isinstance(item, slice):
-            if item.start >= len(self._data):
-                raise RuntimeError(f"Slice exceeds the string length: "
-                                   f"{item.start} >= {len(self._data)}!")
+            indices = item.indices(len(self._data))
+            if indices[2] != 1:
+                raise RuntimeError("Slice with step != 1 is not supported!")
 
-            if item.stop > len(self._data):
-                raise RuntimeError(f"Slice exceeds the string length: "
-                                   f"{item.stop} > {len(self._data)}!")
+            if indices[1] - indices[0] != len(value):
+                err_msg = "The replacement string must have the same length of the slice!"
+                raise RuntimeError(err_msg)
 
-            self._data = (self._data[:item.start] +
-                          value +
-                          self._data[item.start + len(value):])
+            self._data = (
+                self._data[:indices[0]] +
+                value +
+                self._data[indices[0] +
+                len(value):]
+            )
+
             return
 
         if item == -1:

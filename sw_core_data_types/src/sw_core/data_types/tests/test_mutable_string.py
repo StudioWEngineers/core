@@ -188,18 +188,45 @@ class MutableStringTestSuite(unittest.TestCase):
         string = MutableString("ABC CDE EFG")
 
         with self.subTest():
-            string[0:2] = "123"
+            string[0:3] = "123"
             self.assertEqual(string, "123 CDE EFG")
 
         with self.subTest():
-            string[1:3] = "   "
+            string[1:4] = "   "
             self.assertEqual(string, "1   CDE EFG")
+
+        with self.subTest():
+            string[1:5] = "aaaa"
+            self.assertEqual(string, "1aaaaDE EFG")
+
+        with self.subTest():
+            string[:-2] = "ABC DEF G"
+            self.assertEqual(string, "ABC DEF GFG")
+
+        with self.subTest():
+            string[:2] = "12"
+            self.assertEqual(string, "12C DEF GFG")
+
+        with self.subTest():
+            string[-2:] = "12"
+            self.assertEqual(string, "12C DEF G12")
+
+        with self.subTest():
+            string[2:] = "a bcd efg"
+            self.assertEqual(string, "12a bcd efg")
+
+        with self.subTest():
+            string[:] = "123 456 789"
+            self.assertEqual(string, "123 456 789")
 
         with self.assertRaises(RuntimeError):
             string[13:14] = "D"
 
         with self.assertRaises(RuntimeError):
-            string[9:14] = "D"
+            string[0:4:2] = "123"
+
+        with self.assertRaises(RuntimeError):
+            string[1:5] = "123"
 
     def test_split(self) -> None:
         """Tests for the `split` method.
