@@ -12,13 +12,13 @@ It provides methods to:
 
 __author__ = "Studio W Engineers"
 
-__version__ = "0.0.0-alpha.0"
+__version__ = "0.0.1"
 
 __maintainer__ = "Studio W Engineers"
 
 __email__ = "studio.w.engineers@gmail.com"
 
-__status__ "Alpha"
+__status__ "Release"
 """
 # standard library imports
 from json import dumps, loads
@@ -40,8 +40,7 @@ class Parameters:
         self.params: dict[str, Parameters] = {}
 
         # Contain the value and the type of an elemental Parameters.
-        self.val: bool | float | list[Any] | int | None | str = None
-        self.type_ = type(None)
+        self.val: bool | float | list[Parameters] | int | None | str = None
 
     def __getitem__(self, key: str) -> "Parameters":
         """Returns a `Parameters` instance with the given key.
@@ -72,7 +71,7 @@ class Parameters:
 
     def add_value(self,
                   key: str,
-                  val: bool | float | int | None | str) -> None:
+                  val: bool | float | list["Parameters"] | int | None | str) -> None:
         """Adds an item to an existing `Parameters` with the provided `key` and `val`.
         """
         if not isinstance(key, str):
@@ -256,7 +255,7 @@ class Parameters:
         """Returns the length of the array.
         """
         if not self.is_array():
-            err_msg = f"\"size\" method works only with arrays! Got a \"{self.type_}\"!"
+            err_msg = f"\"size\" method works only with arrays! Got a \"{type(self.val)}\"!"
             raise TypeError(err_msg)
 
         return len(self.get_array())
@@ -292,11 +291,11 @@ class Parameters:
                 raise RuntimeError(err_msg)
 
             # check if the type is the same in the defaults
-            if self.params[key].type_ != defaults[key].type_:
+            if isinstance(type(self.params[key]), type(defaults[key])):
                 err_msg = (f"The item with key \"{key}\" is of type "
-                           f"\"{self.params[key].type_}\" in this settings,"
+                           f"\"{type(self.params[key])}\" in this settings,"
                            f" but in the defaults is of type "
-                           f"\"{defaults[key].type_}\". "
+                           f"\"{type(defaults[key])}\". "
                            f"Current settings are:\n"
                            f"{self.pretty_print_json_string()}\n"
                            f"Current defaults are:\n"
@@ -310,7 +309,7 @@ class Parameters:
             if not self.has(key_d):
                 self.add_value(key_d, val_d.val)
 
-            elif recursive and val_d._is_sub_parameter():
+            elif recursive and val_d.is_sub_parameter():
                 self.params[key_d].recursively_validate_and_assign_defaults(val_d)
 
     def values(self) -> list["Parameters"]:
@@ -332,14 +331,14 @@ class Parameters:
         TypeError if the provided input is not of a `Parameters` type or if it is an
         elemental `Parameters`.
         """
-        if not self._is_sub_parameter():
+        if not self.is_sub_parameter():
             err_msg = (f"\"{fct_name}\" can only be used if the value is of "
                        "\"Parameter\" type.")
             raise TypeError(err_msg)
 
     def _get(self,
              cmp_fct: bool,
-             exp_type_str: str) -> bool | float | list[Any] | int | None | str:
+             exp_type_str: str) -> bool | float | list["Parameters"] | int | None | str:
         """Performs type check and returns the content if the type matches.
         """
         if not cmp_fct:
@@ -347,17 +346,16 @@ class Parameters:
 
         return self.val
 
-    def _is_sub_parameter(self) -> bool:
+    def is_sub_parameter(self) -> bool:
         """Checks if the provided input is an instance of the `Parameters` class and if
         the corresponding `self.params` is not empty.
         """
         return isinstance(self, Parameters) and bool(self.params)
 
-    def _set(self, val: bool | float | list[Any] | int | str) -> None:
+    def _set(self, val: bool | float | list["Parameters"] | int | None | str) -> None:
         """Sets the content of an elemental `Parameters`.
         """
         self.val = val
-        self.type_ = type(val)
 
     @classmethod
     def create_from_input_stream(cls, input_stream: str) -> "Parameters":
@@ -406,19 +404,19 @@ class Parameters:
 
         obj = cls()
         obj.val = list_of_param
-        obj.type_ = type(list_of_param)
 
         return obj
 
     @classmethod
-    def _create_base_parameters(cls,
-                                val: bool | float | int | str | None) -> "Parameters":
+    def _create_base_parameters(
+        cls,
+        val: bool | float | list["Parameters"] | int | None | str
+    ) -> "Parameters":
         """A private constructor of the `Parameters` class. It is used only when elemental
         `Parameters` are to be created.
         """
         obj = cls()
         obj.val = val
-        obj.type_ = type(val)
 
         return obj
 
@@ -437,13 +435,13 @@ class Parameters:
         return obj
 
     @staticmethod
-    def _aux_print_array_parameters(input: "Parameters") -> list[Any]:
+    def _aux_print_array_parameters(data: "Parameters") -> list[Any]:
         """Returns a list with the same values of the original `Parameters` as immutable
         Python objects.
         """
         list_of_param = []
-        for item in input.get_array():
-            if item._is_sub_parameter():
+        for item in data.get_array():
+            if item.is_sub_parameter():
                 list_of_param.append(Parameters._aux_print_parameters(item))
 
             elif item.is_array():
@@ -455,13 +453,13 @@ class Parameters:
         return list_of_param
 
     @staticmethod
-    def _aux_print_parameters(input: dict[str, "Parameters"]) -> dict[str, Any]:
+    def _aux_print_parameters(data: dict[str, "Parameters"]) -> dict[str, Any]:
         """Returns a dictionary with the same keys and values of the original `Parameters`
         as immutable Python objects.
         """
         result = {}
-        for key, val in input.items():
-            if val._is_sub_parameter():
+        for key, val in data.items():
+            if val.is_sub_parameter():
                 result.update({key: Parameters._aux_print_parameters(val.params)})
 
             elif val.is_array():
@@ -479,18 +477,18 @@ class Parameters:
         return result
 
     @staticmethod
-    def _create_dict_parameters(input: dict[str, Any]) -> dict[str, "Parameters"]:
+    def _create_dict_parameters(data: dict[str, Any]) -> dict[str, "Parameters"]:
         """A private constructor of the `Parameters` class. It fills the `params`
         dictionary with keys taken from input stream and `Parameters` objects having
         values from the same input stream.
         """
         result = {}
-        for key, value in input.items():
+        for key, value in data.items():
             if isinstance(value, (bool, float, int, str, type(None))):
                 result.update({key: Parameters._create_base_parameters(value)})
 
             elif isinstance(value, dict):
-                new_result = Parameters._create_dict_parameters(input[key])
+                new_result = Parameters._create_dict_parameters(data[key])
                 result.update({key: Parameters._from_parameters(new_result)})
 
             elif isinstance(value, list):

@@ -7,7 +7,7 @@ Tests for the `MutableString` class.
 
 __author__ = "Studio W Engineers"
 
-__version__ = "0.0.0"
+__version__ = "0.0.1"
 
 __maintainer__ = "Studio W Engineers"
 
@@ -62,6 +62,16 @@ class MutableStringTestSuite(unittest.TestCase):
         """Tests for the empty string.
         """
         self.assertEqual(MutableString(), "")
+
+    def test_find(self) -> None:
+        """Tests for the `find` method.
+        """
+        string = MutableString("first string")
+        with self.subTest():
+            self.assertEqual(string.find("in"), 9)
+
+        with self.subTest():
+            self.assertEqual(string.find("ci"), -1)
 
     def test_get_item_int(self) -> None:
         """Tests for the `__getitem__` method, with `int` input.
@@ -123,10 +133,26 @@ class MutableStringTestSuite(unittest.TestCase):
 
         self.assertEqual(string, "abc")
 
+    def test_lstrip(self) -> None:
+        """Tests for the `lstrip` method.
+        """
+        string = MutableString("  ABC")
+        string.lstrip()
+
+        self.assertEqual(string, "ABC")
+
     def test_multiplication(self) -> None:
         """Tests for the `__mul__` method.
         """
         self.assertEqual(MutableString("ABC") * 3, "ABCABCABC")
+
+    def test_rstrip(self) -> None:
+        """Tests for the `rstrip` method.
+        """
+        string = MutableString("  ABC  ")
+        string.rstrip()
+
+        self.assertEqual(string, "  ABC")
 
     def test_to_string_method(self) -> None:
         """Test for the `to_string` method.
@@ -155,6 +181,52 @@ class MutableStringTestSuite(unittest.TestCase):
         with self.subTest():
             string[1] = "D"
             self.assertEqual(string, "1Dc")
+
+    def test_set_with_slice(self) -> None:
+        """Tests for the `__setitem__` method with slice.
+        """
+        string = MutableString("ABC CDE EFG")
+
+        with self.subTest():
+            string[0:3] = "123"
+            self.assertEqual(string, "123 CDE EFG")
+
+        with self.subTest():
+            string[1:4] = "   "
+            self.assertEqual(string, "1   CDE EFG")
+
+        with self.subTest():
+            string[1:5] = "aaaa"
+            self.assertEqual(string, "1aaaaDE EFG")
+
+        with self.subTest():
+            string[:-2] = "ABC DEF G"
+            self.assertEqual(string, "ABC DEF GFG")
+
+        with self.subTest():
+            string[:2] = "12"
+            self.assertEqual(string, "12C DEF GFG")
+
+        with self.subTest():
+            string[-2:] = "12"
+            self.assertEqual(string, "12C DEF G12")
+
+        with self.subTest():
+            string[2:] = "a bcd efg"
+            self.assertEqual(string, "12a bcd efg")
+
+        with self.subTest():
+            string[:] = "123 456 789"
+            self.assertEqual(string, "123 456 789")
+
+        with self.assertRaises(RuntimeError):
+            string[13:14] = "D"
+
+        with self.assertRaises(RuntimeError):
+            string[0:4:2] = "123"
+
+        with self.assertRaises(RuntimeError):
+            string[1:5] = "123"
 
     def test_split(self) -> None:
         """Tests for the `split` method.
