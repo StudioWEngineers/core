@@ -17,6 +17,6 @@ It provides methods to:
 - complete check (keys and type) of hardcoded default parameters;
 - add missing parameters when comparing to hardcoded default parameters.
 
-Currently, despite a quite extended test suite, it is in alpha release since the code is not really readable and therefore difficult to maintain, safely use and imnprove.
+Currently, despite a quite extended test suite, it is in alpha release since the code is not really readable and therefore difficult to maintain, safely use and imnprove. There are also some `mypy` pending fixes.
 
 An example of something (maybe) similar can be found here: https://github.com/edelooff/sqlalchemy-json/tree/master/sqlalchemy_json
