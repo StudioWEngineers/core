@@ -22,4 +22,4 @@ where the `.whl` is located:
 
 .. code-block:: bash
 
-    pip install mz_core-X.X.X0-py3-none-any.whl
+    pip install sw_core-X.Y.Z-py3-none-any.whl
