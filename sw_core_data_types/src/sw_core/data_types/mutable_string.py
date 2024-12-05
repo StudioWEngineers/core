@@ -19,10 +19,13 @@ __email__ = "studio.w.engineers@gmail.com"
 __status__ "Release to manufacturing"
 """
 # standard library imports
+import logging
 
 # third party library imports
 
 # local library specific imports
+
+logger = logging.getLogger(__name__)
 
 
 class MutableString:
@@ -34,6 +37,7 @@ class MutableString:
         if not isinstance(value, str):
             err_msg = (f"Sum operation for MutableString objects is possible only from "
                        f"strings, given of type \"{type(value)}\"!")
+            logger.critical("DIO PORCO")
             raise RuntimeError(err_msg)
 
         return self._data + value
