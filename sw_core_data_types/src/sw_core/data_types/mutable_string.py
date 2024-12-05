@@ -10,7 +10,7 @@ class provides.
 
 __author__ = "Studio W Engineers"
 
-__version__ = "0.0.0"
+__version__ = "0.0.1"
 
 __maintainer__ = "Studio W Engineers"
 
@@ -83,16 +83,29 @@ class MutableString:
     def __repr__(self) -> str:
         return self._data
 
-    def __setitem__(self, item: int, value: str) -> None:
+    def __setitem__(self, item: int | slice, value: str) -> None:
         if not isinstance(value, str):
-            err_msg = (f"Set operation for MutableString objects is possible "
+            err_msg = ("Set operation for MutableString objects is possible "
                        f"only with strings, given value of type \"{type(value)}\"!")
             raise RuntimeError(err_msg)
 
-        if not isinstance(item, int):
-            err_msg = ("Set operation for MutableString objects is not possible "
-                       "with slices!")
-            raise RuntimeError(err_msg)
+        if isinstance(item, slice):
+            indices = item.indices(len(self._data))
+            if indices[2] != 1:
+                raise RuntimeError("Slice with step != 1 is not supported!")
+
+            if indices[1] - indices[0] != len(value):
+                err_msg = "The replacement string must have the same length of the slice!"
+                raise RuntimeError(err_msg)
+
+            self._data = (
+                self._data[:indices[0]] +
+                value +
+                self._data[indices[0] +
+                len(value):]
+            )
+
+            return
 
         if item == -1:
             item += len(self._data)
@@ -109,10 +122,36 @@ class MutableString:
         """
         self._data = self._data.capitalize()
 
+    def find(self, substr: str, start: int | None = None, end: int | None = None) -> int:
+        """Return the lowest index in the `MutableString` where `substr` is found, such
+        that `substr` is contained within `MutableString[start:end]`. Optional arguments
+        `start` and `end` are interpreted as in slice notation.
+
+        Parameters
+        ----------
+        start: int | None, optional default to None
+        end: int | None, optional default to None
+
+        Returns
+        -------
+            -1 on failure.
+        """
+        return self._data.find(substr, start, end)
+
     def lower(self) -> None:
         """Convert the string to lowercase.
         """
         self._data = self._data.lower()
+
+    def lstrip(self) -> None:
+        """Remove leading whitespaces.
+        """
+        self._data = self._data.lstrip()
+
+    def rstrip(self) -> None:
+        """Remove trailing whitespaces.
+        """
+        self._data = self._data.rstrip()
 
     def split(self, sep: str | None = None, maxsplit: int = -1) -> list[str]:
         """Return a list of the substrings in the string, using `sep` as string separator.
