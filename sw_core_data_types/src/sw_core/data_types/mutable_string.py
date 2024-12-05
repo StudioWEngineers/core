@@ -10,7 +10,7 @@ class provides.
 
 __author__ = "Studio W Engineers"
 
-__version__ = "0.3.0"
+__version__ = "0.0.1"
 
 __maintainer__ = "Studio W Engineers"
 
