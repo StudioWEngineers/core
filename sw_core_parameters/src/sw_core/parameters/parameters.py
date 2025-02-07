@@ -12,7 +12,7 @@ It provides methods to:
 
 __author__ = "Studio W Engineers"
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 __maintainer__ = "Studio W Engineers"
 
@@ -54,7 +54,10 @@ class Parameters:
     def __repr__(self) -> str:
         """Returns a string equivalent to the `Parameters` object.
         """
-        return "Parameters object with content:\n" + self.pretty_print_json_string()
+        if self.params:
+            return "Parameters object with content:\n" + self.pretty_print_json_string()
+
+        return "Parameters object with content:\n" + str(self.val)
 
     def add_empty_value(self, key: str) -> None:
         """Adds an empty `Parameters` with the given key.
@@ -441,14 +444,17 @@ class Parameters:
         """
         list_of_param = []
         for item in data.get_array():
-            if item.is_sub_parameter():
-                list_of_param.append(Parameters._aux_print_parameters(item))
+            if isinstance(item, (int, float, bool, str)):
+                list_of_param.append(str(item))
+
+            elif isinstance(item.val, (int, float, bool, str)):
+                list_of_param.append(item.val)
 
             elif item.is_array():
                 list_of_param.append(Parameters._aux_print_array_parameters(item))
 
-            else:
-                list_of_param.append(item.val)
+            elif item.is_sub_parameter():
+                list_of_param.append(Parameters._aux_print_parameters(item))
 
         return list_of_param
 
