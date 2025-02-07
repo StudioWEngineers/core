@@ -445,7 +445,7 @@ class Parameters:
         list_of_param = []
         for item in data.get_array():
             if isinstance(item, (int, float, bool, str)):
-                list_of_param.append(str(item) + "\n")
+                list_of_param.append(str(item))
 
             elif isinstance(item.val, (int, float, bool, str)):
                 list_of_param.append(item.val)
